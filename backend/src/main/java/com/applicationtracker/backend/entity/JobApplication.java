@@ -21,8 +21,9 @@ public class JobApplication
   @Column(nullable = false)
   private String positionTitle;
 
+  @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private String applicationStatus;
+  private ApplicationStatus applicationStatus;
 
   @Column(columnDefinition = "TEXT")
   private String applicationNotes;
@@ -48,7 +49,7 @@ public class JobApplication
     return positionTitle;
   }
 
-  public String getApplicationStatus() {
+  public ApplicationStatus getApplicationStatus() {
     return applicationStatus;
   }
 
@@ -80,7 +81,7 @@ public class JobApplication
     this.positionTitle = positionTitle;
   }
 
-  public void setApplicationStatus(String applicationStatus) {
+  public void setApplicationStatus(ApplicationStatus applicationStatus) {
     this.applicationStatus = applicationStatus;
   }
 
