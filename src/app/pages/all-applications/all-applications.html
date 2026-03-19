@@ -1,1 +1,61 @@
-<p>all-applications works!</p>
+<div class="page-container">
+  <header class="page-header">
+    <div class="header-content">
+      <div>
+        <h1>All Applications</h1>
+        <p class="subtitle">Track and manage your job applications in one place</p>
+      </div>
+      <button type="button" class="debug-btn" (click)="seedDummyData()">
+        [Debug] Add dummy data to DB
+      </button>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Loading applications...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <p class="error-message">{{ error() }}</p>
+      <button type="button" class="retry-btn" (click)="loadApplications()">Try Again</button>
+    </div>
+  } @else if (applications().length === 0) {
+    <div class="empty-state">
+      <p>No applications yet. Add your first application to get started!</p>
+    </div>
+  } @else {
+    <div class="cards-grid">
+      @for (app of applications(); track app.id) {
+        <article class="application-card">
+          <div class="card-header">
+            <h2 class="company-name">{{ app.companyName }}</h2>
+            <span class="status-badge" [ngClass]="getStatusClass(app.applicationStatus)">
+              {{ app.applicationStatus }}
+            </span>
+          </div>
+          <h3 class="position-title">{{ app.positionTitle }}</h3>
+          <div class="card-dates">
+            <div class="date-row">
+              <span class="date-label">Applied:</span>
+              <span class="date-value">{{ app.applicationDate | date: 'mediumDate' }}</span>
+            </div>
+            @if (app.interviewDate) {
+              <div class="date-row">
+                <span class="date-label">Interview:</span>
+                <span class="date-value">{{ app.interviewDate | date: 'mediumDate' }}</span>
+              </div>
+            }
+          </div>
+          @if (app.applicationNotes) {
+            <div class="card-notes">
+              <span class="notes-label">Notes:</span>
+              <p class="notes-content">{{ app.applicationNotes }}</p>
+            </div>
+          }
+        </article>
+      }
+    </div>
+  }
+</div>
