@@ -12,4 +12,9 @@ export class JobApplicationService {
   getAllApplications(): Observable<JobApplication[]> {
     return this.http.get<JobApplication[]>(`${API_BASE}/job-applications`);
   }
+
+  createApplication(data: any): Observable<any>
+  {
+    return this.http.post(`${API_BASE}/job-applications`, data)
+  }
 }

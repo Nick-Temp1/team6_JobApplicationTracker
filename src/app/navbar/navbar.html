@@ -1,1 +1,23 @@
-<p>navbar works!</p>
+<nav class="navbar">
+  <div class="navbar-inner">
+
+    <a class="navbar-brand" routerLink="/dashboard">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-name">Job Application Tracker</span>
+    </a>
+
+    <ul class="navbar-links">
+      <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
+      <li><a routerLink="/all-applications" routerLinkActive="active">Applications</a></li>
+      <li><a routerLink="/schedule" routerLinkActive="active">Schedule</a></li>
+    </ul>
+
+    <div class="navbar-actions">
+      <a routerLink="/add-new-application" class="btn-add">
+        + New Application
+      </a>
+      <a routerLink="/sign-in" class="btn-signout">Sign Out</a>
+    </div>
+
+  </div>
+</nav>

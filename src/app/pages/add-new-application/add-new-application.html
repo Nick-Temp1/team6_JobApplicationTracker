@@ -1,1 +1,93 @@
-<p>add-new-application works!</p>
+<app-navbar></app-navbar>
+
+<main class="page-wrapper">
+  <div class="page-header">
+    <h1>New Application</h1>
+    <p>Log a job you've applied to and track its progress</p>
+  </div>
+
+  <div class="form-card">
+    <form (ngSubmit)="onSubmit()" #appForm="ngForm">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="companyName">Company Name <span class="required">*</span></label>
+          <input
+            id="companyName"
+            type="text"
+            [(ngModel)]="formData.companyName"
+            name="companyName"
+            placeholder="e.g. Google"
+            required />
+        </div>
+
+        <div class="form-group">
+          <label for="positionTitle">Position Title <span class="required">*</span></label>
+          <input
+            id="positionTitle"
+            type="text"
+            [(ngModel)]="formData.positionTitle"
+            name="positionTitle"
+            placeholder="e.g. Software Developer"
+            required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="applicationStatus">Status <span class="required">*</span></label>
+          <select
+            id="applicationStatus"
+            [(ngModel)]="formData.applicationStatus"
+            name="applicationStatus"
+            required>
+            <option value="" disabled>Select a status</option>
+            <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="dateOfApplication">Date of Application <span class="required">*</span></label>
+          <input
+            id="dateOfApplication"
+            type="date"
+            [(ngModel)]="formData.dateOfApplication"
+            name="dateOfApplication"
+            required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="interviewDate">Interview Date <span class="optional">(optional)</span></label>
+        <input
+          id="interviewDate"
+          type="date"
+          [(ngModel)]="formData.interviewDate"
+          name="interviewDate" />
+      </div>
+
+      <div class="form-group">
+        <label for="applicationNotes">Notes <span class="optional">(optional)</span></label>
+        <textarea
+          id="applicationNotes"
+          [(ngModel)]="formData.applicationNotes"
+          name="applicationNotes"
+          rows="4"
+          placeholder="Recruiter contact, referral info, anything worth remembering...">
+        </textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="appForm.invalid" class="btn-submit">
+          Save Application
+        </button>
+      </div>
+
+      <p class="success-msg" *ngIf="successMessage">✓ {{ successMessage }}</p>
+      <p class="error-msg" *ngIf="errorMessage">✕ {{ errorMessage }}</p>
+
+    </form>
+  </div>
+</main>
+
+<app-footer></app-footer>
