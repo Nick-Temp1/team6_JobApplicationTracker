@@ -1,11 +1,14 @@
 package com.applicationtracker.backend.controller;
 
+import com.applicationtracker.backend.dto.JobApplicationDTO;
 import com.applicationtracker.backend.dto.JobApplicationDto;
 import com.applicationtracker.backend.entity.ApplicationStatus;
 import com.applicationtracker.backend.entity.JobApplication;
 import com.applicationtracker.backend.entity.User;
+import com.applicationtracker.backend.service.JobApplicationService;
 import com.applicationtracker.backend.repository.JobApplicationRepository;
 import com.applicationtracker.backend.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +21,8 @@ public class JobApplicationController {
 
   private final JobApplicationRepository jobApplicationRepository;
   private final UserRepository userRepository;
+  @Autowired
+  private JobApplicationService jobApplicationService;
 
   public JobApplicationController(
       JobApplicationRepository jobApplicationRepository,
@@ -63,6 +68,12 @@ public class JobApplicationController {
     List<JobApplication> saved = jobApplicationRepository.saveAll(applications);
     List<JobApplicationDto> dtos = saved.stream().map(this::toDto).toList();
     return ResponseEntity.ok(dtos);
+  }
+
+  @PostMapping
+  public ResponseEntity<JobApplication> createApplication(@RequestBody JobApplicationDTO dto) {
+    JobApplication saved = jobApplicationService.createApplication(dto);
+    return ResponseEntity.ok(saved);
   }
 
   private JobApplication createApplication(
