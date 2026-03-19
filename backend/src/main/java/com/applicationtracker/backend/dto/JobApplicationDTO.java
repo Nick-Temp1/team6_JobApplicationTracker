@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 public class JobApplicationDTO
 {
+  private Long id;
   private String companyName;
   private String positionTitle;
   private ApplicationStatus applicationStatus;
@@ -39,6 +40,19 @@ public class JobApplicationDTO
 
   public Long getUserId() {
     return userId;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  /** Alias for frontend compatibility - returns dateOfApplication. */
+  public LocalDate getApplicationDate() {
+    return dateOfApplication;
   }
 
   public void setCompanyName(String companyName) {

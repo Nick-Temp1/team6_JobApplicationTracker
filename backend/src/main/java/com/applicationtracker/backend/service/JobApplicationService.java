@@ -8,17 +8,23 @@ import com.applicationtracker.backend.repository.JobApplicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
-public class JobApplicationService
-{
+public class JobApplicationService {
   @Autowired
   private JobApplicationRepository jobApplicationRepository;
 
   @Autowired
   private UserRepository userRepository;
 
-  public JobApplication createApplication(JobApplicationDTO dto)
-  {
+  public List<JobApplicationDTO> getAllApplications() {
+    List<JobApplication> apps = jobApplicationRepository.findAll();
+    return apps.stream().map(this::toDTO).collect(Collectors.toList());
+  }
+
+  public JobApplicationDTO createApplication(JobApplicationDTO dto) {
     User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new RuntimeException("User Not Found"));
 
     JobApplication app = new JobApplication();
@@ -30,6 +36,19 @@ public class JobApplicationService
     app.setApplicationDate(dto.getDateOfApplication());
     app.setInterviewDate(dto.getInterviewDate());
 
-    return jobApplicationRepository.save(app);
+    JobApplication saved = jobApplicationRepository.save(app);
+    return toDTO(saved);
+  }
+
+  private JobApplicationDTO toDTO(JobApplication app) {
+    JobApplicationDTO dto = new JobApplicationDTO();
+    dto.setId(app.getId());
+    dto.setCompanyName(app.getCompanyName());
+    dto.setPositionTitle(app.getPositionTitle());
+    dto.setApplicationStatus(app.getApplicationStatus());
+    dto.setApplicationNotes(app.getApplicationNotes());
+    dto.setDateOfApplication(app.getApplicationDate());
+    dto.setInterviewDate(app.getInterviewDate());
+    return dto;
   }
 }

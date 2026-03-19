@@ -28,20 +28,9 @@ export class AllApplications implements OnInit {
         this.applications.set(data);
         this.loading.set(false);
       },
-      error: (err) => {
+      error: () => {
         this.error.set('Failed to load applications. Please try again.');
         this.loading.set(false);
-      },
-    });
-  }
-
-  seedDummyData(): void {
-    this.jobApplicationService.seedDummyData().subscribe({
-      next: (data) => {
-        this.applications.set(data);
-      },
-      error: () => {
-        this.error.set('Failed to seed data. Is the backend running?');
       },
     });
   }
