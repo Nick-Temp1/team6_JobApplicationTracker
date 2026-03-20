@@ -26,4 +26,17 @@ public class JobApplicationController {
     JobApplicationDTO saved = jobApplicationService.createApplication(dto);
     return ResponseEntity.ok(saved);
   }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<JobApplicationDTO> updateApplication(
+      @PathVariable Long id, @RequestBody JobApplicationDTO dto) {
+    JobApplicationDTO updated = jobApplicationService.updateApplication(id, dto);
+    return ResponseEntity.ok(updated);
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteApplication(@PathVariable Long id) {
+    jobApplicationService.deleteApplication(id);
+    return ResponseEntity.noContent().build();
+  }
 }
