@@ -2,10 +2,13 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { DatePipe, NgClass } from '@angular/common';
 import { JobApplicationService } from '../../services/job-application.service';
 import { JobApplication } from '../../models/job-application.model';
+import { Navbar } from '../../navbar/navbar';
+import { Footer } from '../../footer/footer';
 
 @Component({
   selector: 'app-all-applications',
-  imports: [DatePipe, NgClass],
+  standalone: true,
+  imports: [DatePipe, NgClass, Navbar, Footer],
   templateUrl: './all-applications.html',
   styleUrl: './all-applications.css',
 })
