@@ -7,7 +7,25 @@
         <h1>All Applications</h1>
         <p class="subtitle">Track and manage your job applications in one place</p>
       </div>
+      @if (!loading() && !error() && applications().length > 0) {
+        <div class="header-actions">
+          @if (!editMode) {
+            <button type="button" class="edit-btn" (click)="startEdit()">Edit applications</button>
+          } @else {
+            <button type="button" class="cancel-btn" (click)="cancelEdit()" [disabled]="saving">Cancel</button>
+            <button type="button" class="save-btn" (click)="saveChanges()" [disabled]="saving">
+              {{ saving ? 'Saving…' : 'Save changes' }}
+            </button>
+          }
+        </div>
+      }
     </div>
+    @if (saveMessage) {
+      <p class="feedback success">{{ saveMessage }}</p>
+    }
+    @if (saveError) {
+      <p class="feedback error">{{ saveError }}</p>
+    }
   </header>
 
   @if (loading()) {
@@ -24,7 +42,7 @@
     <div class="empty-state">
       <p>No applications yet. Add your first application to get started!</p>
     </div>
-  } @else {
+  } @else if (!editMode) {
     <div class="cards-grid">
       @for (app of applications(); track app.id) {
         <article class="application-card">
@@ -38,7 +56,7 @@
           <div class="card-dates">
             <div class="date-row">
               <span class="date-label">Applied:</span>
-              <span class="date-value">{{ app.applicationDate | date: 'mediumDate' }}</span>
+              <span class="date-value">{{ app.dateOfApplication | date: 'mediumDate' }}</span>
             </div>
             @if (app.interviewDate) {
               <div class="date-row">
@@ -53,6 +71,77 @@
               <p class="notes-content">{{ app.applicationNotes }}</p>
             </div>
           }
+        </article>
+      }
+    </div>
+  } @else {
+    <div class="cards-grid">
+      @for (row of editRows; track row.id) {
+        <article class="application-card card-editing">
+          <div class="card-header card-header-edit">
+            <h2 class="company-name">{{ row.companyName }}</h2>
+            <button
+              type="button"
+              class="icon-btn delete-btn"
+              (click)="deleteRow(row)"
+              [disabled]="saving"
+              aria-label="Delete application"
+              title="Delete"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 6h18" />
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                <line x1="10" x2="10" y1="11" y2="17" />
+                <line x1="14" x2="14" y1="11" y2="17" />
+              </svg>
+            </button>
+          </div>
+          <h3 class="position-title">{{ row.positionTitle }}</h3>
+          <p class="read-only-meta">
+            Applied:
+            <strong>{{ row.dateOfApplication | date: 'mediumDate' }}</strong>
+          </p>
+
+          <div class="field-group">
+            <label class="field-label" [attr.for]="'status-' + row.id">Status</label>
+            <select
+              class="field-control"
+              [id]="'status-' + row.id"
+              name="status-{{ row.id }}"
+              [(ngModel)]="row.applicationStatus"
+              [disabled]="saving"
+            >
+              @for (s of statuses; track s) {
+                <option [value]="s">{{ s }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" [attr.for]="'interview-' + row.id">Interview date</label>
+            <input
+              class="field-control"
+              type="date"
+              [id]="'interview-' + row.id"
+              name="interview-{{ row.id }}"
+              [(ngModel)]="row.interviewDate"
+              [disabled]="saving"
+            />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" [attr.for]="'notes-' + row.id">Notes</label>
+            <textarea
+              class="field-control notes-input"
+              [id]="'notes-' + row.id"
+              name="notes-{{ row.id }}"
+              [(ngModel)]="row.applicationNotes"
+              rows="3"
+              placeholder="Notes…"
+              [disabled]="saving"
+            ></textarea>
+          </div>
         </article>
       }
     </div>

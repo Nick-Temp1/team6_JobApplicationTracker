@@ -6,6 +6,6 @@ export interface JobApplication {
   positionTitle: string;
   applicationStatus: ApplicationStatus;
   applicationNotes?: string;
-  applicationDate: string;
+  dateOfApplication: string;
   interviewDate?: string;
 }
