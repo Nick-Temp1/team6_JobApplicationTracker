@@ -347,7 +347,7 @@
   padding: 0.5rem 0.65rem;
   font-size: 0.875rem;
   color: var(--text-primary);
-  background: var(--bg-page, #0d1117);
+  background: #0d1117;
   border: 1px solid var(--border);
   border-radius: 8px;
 }

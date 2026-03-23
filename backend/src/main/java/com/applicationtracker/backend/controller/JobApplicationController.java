@@ -16,8 +16,8 @@ public class JobApplicationController {
   private JobApplicationService jobApplicationService;
 
   @GetMapping
-  public ResponseEntity<List<JobApplicationDTO>> getAllApplications() {
-    List<JobApplicationDTO> applications = jobApplicationService.getAllApplications();
+  public ResponseEntity<List<JobApplicationDTO>> getAllApplications(@RequestParam Long userId) {
+    List<JobApplicationDTO> applications = jobApplicationService.getAllApplications(userId);
     return ResponseEntity.ok(applications);
   }
 

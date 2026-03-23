@@ -21,8 +21,8 @@ public class JobApplicationService {
   @Autowired
   private UserRepository userRepository;
 
-  public List<JobApplicationDTO> getAllApplications() {
-    List<JobApplication> apps = jobApplicationRepository.findAll();
+  public List<JobApplicationDTO> getAllApplications(Long userId) {
+    List<JobApplication> apps = jobApplicationRepository.findByUser_Id(userId);
     return apps.stream().map(this::toDTO).collect(Collectors.toList());
   }
 

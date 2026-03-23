@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Navbar } from '../../navbar/navbar';
 import { Footer } from '../../footer/footer';
 import { JobApplicationService } from '../../services/job-application.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-add-new-application',
@@ -18,6 +19,14 @@ export class AddNewApplication {
 
   statuses = ['PENDING', 'INTERVIEW', 'OFFER', 'REJECTED'];
 
+  constructor(
+    private jobApplicationService: JobApplicationService,
+    private authService: AuthService,
+    private router: Router,
+  ) {
+    this.formData.userId = this.authService.getCurrentUser()?.id ?? null;
+  }
+
   formData = {
     companyName: '',
     positionTitle: '',
@@ -25,16 +34,11 @@ export class AddNewApplication {
     applicationNotes: '',
     dateOfApplication: '',
     interviewDate: '',
-    userId: 1, // hardcoded for now, will come from auth later
+    userId: null as number | null,
   };
 
   successMessage = '';
   errorMessage = '';
-
-  constructor(
-    private jobApplicationService: JobApplicationService,
-    private router: Router,
-  ) {}
 
   onSubmit() {
     this.successMessage = '';
@@ -44,7 +48,7 @@ export class AddNewApplication {
       next: () => {
         this.successMessage = 'Application added successfully!';
         this.appForm.reset();
-        this.formData.userId = 1;
+        this.formData.userId = this.authService.getCurrentUser()?.id ?? null;
       },
       error: () => {
         this.errorMessage = 'Something went wrong. Please try again.';
