@@ -1,1 +1,115 @@
-<p>schedule works!</p>
+<app-navbar />
+
+<main class="page-wrapper">
+  <header class="page-header">
+    <div class="header-content">
+      <div>
+        <h1>Schedule</h1>
+        <p class="subtitle">Interviews from your applications, shown on the calendar</p>
+      </div>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Loading applications...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <p class="error-message">{{ error() }}</p>
+      <button type="button" class="retry-btn" (click)="loadApplications()">Try Again</button>
+    </div>
+  } @else {
+    <div class="calendar-toolbar">
+      <button type="button" class="nav-month-btn" (click)="prevMonth()" aria-label="Previous month">
+        ‹
+      </button>
+      <h2 class="month-title">{{ viewMonth() | date: 'MMMM yyyy' }}</h2>
+      <button type="button" class="nav-month-btn" (click)="nextMonth()" aria-label="Next month">
+        ›
+      </button>
+      <button type="button" class="today-btn" (click)="goToToday()">Today</button>
+    </div>
+
+    <div class="calendar" role="grid" aria-label="Interview calendar">
+      @for (label of weekdayLabels; track label) {
+        <div class="weekday-header" role="columnheader">{{ label }}</div>
+      }
+      @for (cell of calendarCells(); track trackCell($index, cell)) {
+        @let dayApps = appsForCell(cell);
+        <div
+          class="day-cell"
+          [class.outside-month]="!cell.isCurrentMonth"
+          role="gridcell"
+        >
+          <span class="day-number">{{ cell.date.getDate() }}</span>
+          @if (dayApps.length > 0) {
+            <button
+              type="button"
+              class="interview-indicator"
+              (click)="openDay(cell)"
+              [attr.aria-label]="
+                dayApps.length === 1
+                  ? 'Interview: ' + dayApps[0].companyName
+                  : dayApps.length + ' interviews on this day'
+              "
+            >
+              <span class="interview-dot" aria-hidden="true"></span>
+              @if (dayApps.length > 1) {
+                <span class="interview-count">{{ dayApps.length }}</span>
+              }
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+</main>
+
+<app-footer />
+
+@if (modalOpen()) {
+  <div class="modal-backdrop" role="presentation" (click)="closeModal()"></div>
+  <div
+    class="modal-dialog"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="'schedule-modal-title'"
+  >
+    <div class="modal-header">
+      <h3 id="schedule-modal-title">
+        {{ modalDate() | date: 'fullDate' }}
+      </h3>
+      <button type="button" class="modal-close" (click)="closeModal()" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body">
+      @for (app of modalApps(); track app.id) {
+        <article class="app-card">
+          <h4 class="app-company">{{ app.companyName }}</h4>
+          <p class="app-position">{{ app.positionTitle }}</p>
+          <dl class="app-details">
+            <div>
+              <dt>Status</dt>
+              <dd>{{ app.applicationStatus }}</dd>
+            </div>
+            <div>
+              <dt>Applied</dt>
+              <dd>{{ app.dateOfApplication | date: 'mediumDate' }}</dd>
+            </div>
+            <div>
+              <dt>Interview</dt>
+              <dd>{{ app.interviewDate | date: 'mediumDate' }}</dd>
+            </div>
+            @if (app.applicationNotes) {
+              <div class="notes-row">
+                <dt>Notes</dt>
+                <dd>{{ app.applicationNotes }}</dd>
+              </div>
+            }
+          </dl>
+        </article>
+      }
+    </div>
+  </div>
+}
