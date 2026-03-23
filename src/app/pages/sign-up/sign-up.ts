@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -19,8 +19,10 @@ export class SignUp {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
-    if (this.authService.isLoggedIn()) {
+    if (this.authService.isLoggedIn())
+    {
       this.router.navigate(['/dashboard']);
     }
   }
@@ -29,7 +31,10 @@ export class SignUp {
     this.errorMessage = '';
     this.authService.register(this.username, this.password).subscribe({
       next: () => this.router.navigate(['/sign-in']),
-      error: () => (this.errorMessage = 'Username already taken. Try another.'),
+      error: () => {
+        this.errorMessage = 'Username already taken.';
+        this.cdr.detectChanges();
+      }
     });
   }
 }

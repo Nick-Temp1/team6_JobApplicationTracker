@@ -50,10 +50,6 @@ public class JobApplicationDTO
     this.id = id;
   }
 
-  /** Alias for frontend compatibility - returns dateOfApplication. */
-  public LocalDate getApplicationDate() {
-    return dateOfApplication;
-  }
 
   public void setCompanyName(String companyName) {
     this.companyName = companyName;

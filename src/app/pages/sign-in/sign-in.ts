@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -17,7 +17,11 @@ export class SignIn
   password = '';
   errorMessage = '';
 
-  constructor(private authService: AuthService, private router: Router)
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+    )
   {
     if(this.authService.isLoggedIn())
     {
@@ -30,7 +34,10 @@ export class SignIn
     this.errorMessage = '';
     this.authService.login(this.username, this.password).subscribe({
       next: () => this.router.navigate(['/dashboard']),
-      error: () => this.errorMessage = 'Invalid username or password'
+      error: () => {
+        this.errorMessage = 'Invalid username or password';
+        this.cdr.detectChanges();
+      }
     });
   }
 }
