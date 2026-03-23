@@ -18,8 +18,7 @@ public class UserController
   public ResponseEntity<?> register(@RequestBody UserDTO userDto)
   {
     try {
-      User user = userService.register(userDto);
-      return ResponseEntity.ok(user);
+      return ResponseEntity.ok(userService.register(userDto));
     } catch (RuntimeException e)
     {
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -30,8 +29,7 @@ public class UserController
   public ResponseEntity<?> login(@RequestBody UserDTO userDto)
   {
     try {
-      User user = userService.login(userDto);
-      return ResponseEntity.ok(user);
+      return ResponseEntity.ok(userService.login(userDto));
     } catch (RuntimeException e)
     {
       return ResponseEntity.status(401).body(e.getMessage());
