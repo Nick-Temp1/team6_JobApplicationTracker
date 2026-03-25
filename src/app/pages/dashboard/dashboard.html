@@ -1,2 +1,130 @@
-<app-navbar></app-navbar>
-<app-footer></app-footer>
+<app-navbar />
+
+<main class="page-wrapper">
+  <header class="page-header">
+    <h1>Dashboard</h1>
+    <p class="subtitle">Overview of your job search at a glance</p>
+  </header>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Loading dashboard…</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <p class="error-message">{{ error() }}</p>
+      <button type="button" class="retry-btn" (click)="loadApplications()">Try again</button>
+    </div>
+  } @else {
+    <div class="dashboard-stack">
+      <section class="summary-strip" aria-label="Key metrics">
+        <div class="summary-card">
+          <span class="summary-value">{{ totalApplications() }}</span>
+          <span class="summary-label">Applications tracked</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-value">{{ inProgressCount() }}</span>
+          <span class="summary-label">In progress</span>
+          <span class="summary-sub">Pending or interview</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-value">{{ upcomingInterviews().length }}</span>
+          <span class="summary-label">Upcoming interviews</span>
+          <span class="summary-sub">On or after today</span>
+        </div>
+      </section>
+
+      <a class="dashboard-tile tile-stats" routerLink="/all-applications">
+        <div class="tile-head">
+          <div>
+            <h2 class="tile-title">Application status</h2>
+            <p class="tile-hint">Click to view and edit all applications</p>
+          </div>
+          @if (totalApplications() > 0) {
+            <span class="tile-badge">{{ totalApplications() }} total</span>
+          }
+        </div>
+        @if (totalApplications() === 0) {
+          <p class="tile-empty">No applications yet. Add one to see breakdown by status.</p>
+        } @else {
+          <div class="stat-grid">
+            @for (s of statusOrder; track s) {
+              <div class="stat-cell" [attr.data-status]="s.toLowerCase()">
+                <div class="stat-cell-top">
+                  <span class="stat-label">{{ s | titlecase }}</span>
+                  <span class="stat-value">{{ percent(s) }}%</span>
+                </div>
+                <div class="stat-bar-track" aria-hidden="true">
+                  <div class="stat-bar-fill" [style.width.%]="percent(s)"></div>
+                </div>
+                <span class="stat-count">{{ statusCounts()[s] }} apps</span>
+              </div>
+            }
+          </div>
+        }
+      </a>
+
+      <div class="pair-row">
+        <a class="dashboard-tile tile-interviews" routerLink="/schedule">
+          <h2 class="tile-title">Upcoming interviews</h2>
+          <p class="tile-hint">Open your schedule</p>
+          @if (upcomingInterviews().length === 0) {
+            <p class="tile-empty">No upcoming interviews scheduled.</p>
+          } @else {
+            <ul class="interview-list">
+              @for (app of upcomingInterviews(); track app.id) {
+                <li class="interview-item">
+                  <span class="interview-company">{{ app.companyName }}</span>
+                  <span class="interview-role">{{ app.positionTitle }}</span>
+                  <time class="interview-when" [attr.datetime]="app.interviewDate">
+                    {{ app.interviewDate | date: 'mediumDate' }}
+                  </time>
+                </li>
+              }
+            </ul>
+          }
+        </a>
+
+        <a class="dashboard-tile tile-recent" routerLink="/all-applications">
+          <h2 class="tile-title">Recent applications</h2>
+          <p class="tile-hint">Newest by application date</p>
+          @if (recentApplications().length === 0) {
+            <p class="tile-empty">Nothing here yet — create your first application.</p>
+          } @else {
+            <ul class="recent-list">
+              @for (app of recentApplications(); track app.id) {
+                <li class="recent-item">
+                  <div class="recent-main">
+                    <span class="recent-company">{{ app.companyName }}</span>
+                    <span class="recent-role">{{ app.positionTitle }}</span>
+                  </div>
+                  <div class="recent-meta">
+                    <span class="recent-status" [attr.data-status]="app.applicationStatus.toLowerCase()">{{
+                      app.applicationStatus | titlecase
+                    }}</span>
+                    <time class="recent-applied" [attr.datetime]="app.dateOfApplication">{{
+                      app.dateOfApplication | date: 'mediumDate'
+                    }}</time>
+                  </div>
+                </li>
+              }
+            </ul>
+          }
+        </a>
+      </div>
+
+      <a class="dashboard-tile tile-create" routerLink="/add-new-application">
+        <div class="create-inner">
+          <div>
+            <h2 class="tile-title">Create new application</h2>
+            <p class="tile-hint">Log a company and role you applied to</p>
+          </div>
+          <span class="create-cta">+ New application</span>
+        </div>
+      </a>
+    </div>
+  }
+</main>
+
+<app-footer />
