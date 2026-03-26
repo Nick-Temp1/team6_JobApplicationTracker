@@ -57,13 +57,18 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="interviewDate">Interview Date <span class="optional">(optional)</span></label>
+      <div class="form-group" *ngIf="formData.applicationStatus !== 'PENDING' && formData.applicationStatus !== ''">
+        <label for="interviewDate">
+          Interview Date
+          <span class="required" *ngIf="formData.applicationStatus === 'INTERVIEW'">*</span>
+          <span class="optional" *ngIf="formData.applicationStatus === 'OFFER' || formData.applicationStatus === 'REJECTED'">(optional)</span>
+        </label>
         <input
           id="interviewDate"
           type="date"
           [(ngModel)]="formData.interviewDate"
-          name="interviewDate" />
+          name="interviewDate"
+          [required]="formData.applicationStatus === 'INTERVIEW'"/>
       </div>
 
       <div class="form-group">

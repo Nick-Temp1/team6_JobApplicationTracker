@@ -13,7 +13,7 @@
             <button type="button" class="edit-btn" (click)="startEdit()">Edit applications</button>
           } @else {
             <button type="button" class="cancel-btn" (click)="cancelEdit()" [disabled]="saving">Cancel</button>
-            <button type="button" class="save-btn" (click)="saveChanges()" [disabled]="saving">
+            <button type="button" class="save-btn" (click)="saveChanges()" [disabled]="saving || !isEditRowsValid()">
               {{ saving ? 'Saving…' : 'Save changes' }}
             </button>
           }
@@ -110,6 +110,7 @@
               [id]="'status-' + row.id"
               name="status-{{ row.id }}"
               [(ngModel)]="row.applicationStatus"
+              (change)="onEditStatusChange(row)"
               [disabled]="saving"
             >
               @for (s of statuses; track s) {
@@ -119,15 +120,28 @@
           </div>
 
           <div class="field-group">
-            <label class="field-label" [attr.for]="'interview-' + row.id">Interview date</label>
-            <input
-              class="field-control"
-              type="date"
-              [id]="'interview-' + row.id"
-              name="interview-{{ row.id }}"
-              [(ngModel)]="row.interviewDate"
-              [disabled]="saving"
-            />
+            <label class="field-label" [attr.for]="'interview-' + row.id">
+              Interview date
+              @if (row.applicationStatus === 'INTERVIEW') {
+                <span class="required">*</span>
+              }
+              @if (row.applicationStatus === 'OFFER' || row.applicationStatus === 'REJECTED') {
+                <span class="optional">(optional)</span>
+              }
+            </label>
+            @if (row.applicationStatus === 'PENDING') {
+              <span class="field-na">N/A</span>
+            } @else {
+              <input
+                class="field-control"
+                type="date"
+                [id]="'interview-' + row.id"
+                name="interview-{{ row.id }}"
+                [(ngModel)]="row.interviewDate"
+                [required]="row.applicationStatus === 'INTERVIEW'"
+                [disabled]="saving"
+              />
+            }
           </div>
 
           <div class="field-group">

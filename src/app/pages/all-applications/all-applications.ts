@@ -94,6 +94,11 @@ export class AllApplications implements OnInit {
   saveChanges(): void {
     this.saveMessage = '';
     this.saveError = '';
+    if (!this.isEditRowsValid())
+    {
+      this.saveError = 'Applications with "Interview" must have an interview date';
+      return;
+    }
     this.saving = true;
 
     const calls = this.editRows.map((row) =>
@@ -144,5 +149,16 @@ export class AllApplications implements OnInit {
       REJECTED: 'status-rejected',
     };
     return map[status] ?? 'status-pending';
+  }
+
+  isEditRowsValid(): boolean {
+    return this.editRows.every(row =>
+    row.applicationStatus !== 'INTERVIEW' || row.interviewDate.trim().length > 0);
+  }
+
+  onEditStatusChange(row: EditableRow): void {
+    if (row.applicationStatus === 'PENDING'){
+      row.interviewDate = '';
+    }
   }
 }

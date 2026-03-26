@@ -44,6 +44,10 @@ export class AddNewApplication {
     this.successMessage = '';
     this.errorMessage = '';
 
+    if(this.formData.applicationStatus === 'PENDING') {
+      this.formData.interviewDate = '';
+    }
+
     this.jobApplicationService.createApplication(this.formData).subscribe({
       next: () => {
         this.successMessage = 'Application added successfully!';
