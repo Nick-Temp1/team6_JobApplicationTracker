@@ -90,7 +90,7 @@
           <h2 class="tile-title">Recent applications</h2>
           <p class="tile-hint">Newest by application date</p>
           @if (recentApplications().length === 0) {
-            <p class="tile-empty">Nothing here yet — create your first application.</p>
+            <p class="tile-empty">Nothing here yet. Create your first application!</p>
           } @else {
             <ul class="recent-list">
               @for (app of recentApplications(); track app.id) {
@@ -100,9 +100,11 @@
                     <span class="recent-role">{{ app.positionTitle }}</span>
                   </div>
                   <div class="recent-meta">
-                    <span class="recent-status" [attr.data-status]="app.applicationStatus.toLowerCase()">{{
-                      app.applicationStatus | titlecase
-                    }}</span>
+                    <span
+                      class="recent-status"
+                      [attr.data-status]="app.applicationStatus.toLowerCase()"
+                      >{{ app.applicationStatus | titlecase }}</span
+                    >
                     <time class="recent-applied" [attr.datetime]="app.dateOfApplication">{{
                       app.dateOfApplication | date: 'mediumDate'
                     }}</time>
